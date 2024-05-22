@@ -1,4 +1,4 @@
-# hm-shoping
+# hm-shoping 智慧商城项目
 
 ## Project setup
 ```
