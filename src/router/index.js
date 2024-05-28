@@ -11,6 +11,7 @@ import Home from '@/views/layout/home'
 import Category from '@/views/layout/category'
 import Cart from '@/views/layout/cart'
 import User from '@/views/layout/user'
+import store from '@/store'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,31 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+// 设置需要权限才能进入的页面路由
+const authUrl = ['/pay', '/myorder']
+
+// 设置全局前置守卫
+// 访问的路由在解析前都会经过全局前置守卫
+router.beforeEach((to, from, next) => {
+  // to: 即将要进入的目标 路由对象
+  // from: 当前导航正要离开的路由
+  // next() 不中断 直接放行 next(xxx) 中断当前导航，重置到指定路由
+
+  if (!authUrl.includes(to.path)) {
+    // 不在权限页面中，直接放行
+    next()
+    return
+  }
+  // 获取token token不存在则返回到登录页
+  // const token = store.state.user.userInfo.token
+  const token = store.getters.userToken
+  if (token) {
+    next()
+  } else {
+    next('/login')
+  }
 })
 
 export default router
