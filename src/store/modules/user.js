@@ -1,12 +1,11 @@
 // user模块
+import { getInfo, setInfo } from '@/utils/storage'
+
 export default {
   namespaced: true,
   state () {
     return {
-      userInfo: {
-        userId: '',
-        token: ''
-      }
+      userInfo: getInfo()
     }
   },
   mutations: {
@@ -14,8 +13,16 @@ export default {
     setUserInfo (state, obj) {
       // 修改userInfo
       state.userInfo = obj
+      // 数据持久化 保存到本地
+      setInfo(obj)
     }
   },
-  actions: {},
+  actions: {
+    logout (context) {
+      // 重置user 个人信息 + 购物车数据
+      context.commit('setUserInfo', {})
+      context.commit('cart/setCartList', [], { root: true })
+    }
+  },
   getters: {}
 }
